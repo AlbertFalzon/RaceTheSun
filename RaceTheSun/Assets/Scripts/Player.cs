@@ -4,13 +4,43 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] float playerSpeed = 150f;
+    float currentSpeed;
     float turnSpeed = 5f;
-    float maxCW = -135f;
-    float maxCCW = -45f;
+
+    private void Start()
+    {
+        currentSpeed = playerSpeed;
+    }
 
     void Update()
     {
         PlayerRotate();
+        accelDecel();
+    }
+
+    private void accelDecel()
+    {
+        // Acceleration and deceleration
+        if ((Input.GetAxis("Vertical") > 0) && (currentSpeed <= 250f))
+        {
+            currentSpeed += 1f;
+        }
+        else if ((Input.GetAxis("Vertical") < 0) && (currentSpeed >= 100f))
+        {
+            currentSpeed -= 1f;
+        }
+        else
+        {
+            if (currentSpeed > 150f)
+            {
+                currentSpeed -= 1f;
+            }
+            else if (currentSpeed < 150f)
+            {
+                currentSpeed += 1f;
+            }
+        }
     }
 
     private void PlayerRotate()
@@ -29,5 +59,10 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, (turnSpeed / 5) * Time.deltaTime);
         }
 
+    }
+
+    public float returnSpeed()
+    {
+        return currentSpeed;
     }
 }

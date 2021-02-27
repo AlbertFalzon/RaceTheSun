@@ -9,4 +9,5 @@ Since the plane is infinite the current plan is to have to obstacles move instea
 Assets - 
 Ship: https://assetstore.unity.com/packages/3d/vehicles/space/space-ship-titanium-fighter-21594
 Terrain: https://assetstore.unity.com/packages/3d/environments/landscapes/winter-zone-mini-107583
+Fog Particles: https://assetstore.unity.com/packages/essentials/tutorial-projects/unity-particle-pack-127325#content
 Music: 

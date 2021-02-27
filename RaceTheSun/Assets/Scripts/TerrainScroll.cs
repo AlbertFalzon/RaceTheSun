@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class TerrainScroll : MonoBehaviour
 {
-    [SerializeField] float scrollSpeed = 0.5f;
+    float scrollSpeed = 0.5f;
     Material terrain;
     Vector2 offset;
     
     void Start()
     {
         terrain = GetComponent<Renderer>().material;
-        offset = new Vector2(0f, scrollSpeed);
+        scrollSpeed = FindObjectOfType<Player>().returnSpeed() / 375;
     }
 
     void Update()
     {
-        terrain.mainTextureOffset += offset * Time.deltaTime;
+        scrollSpeed = -(FindObjectOfType<Player>().returnSpeed() / 375);
+        terrain.mainTextureOffset += new Vector2(0f, scrollSpeed * Time.deltaTime);
     }
 }
