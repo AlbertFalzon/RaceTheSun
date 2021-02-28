@@ -8,6 +8,31 @@ public class Player : MonoBehaviour
     float currentSpeed;
     float turnSpeed = 5f;
 
+    [SerializeField] AudioClip explosionSound;
+    [SerializeField] [Range(0, 5)] float explosionSoundVolume = 2;
+
+    [SerializeField] GameObject shipExplosionEffect;
+    float explosionDuration = 1f;
+
+    [SerializeField] GameObject mainCamera;
+    bool alive = true;
+
+    private void OnTriggerEnter()
+    {
+        print("Trigger Enter");
+        alive = false;
+        currentSpeed = 0f;
+        playerExplode();
+    }
+
+    private void playerExplode()
+    {
+        Destroy(gameObject);
+        AudioSource.PlayClipAtPoint(explosionSound, mainCamera.transform.position, explosionSoundVolume);
+        GameObject explosion = Instantiate(shipExplosionEffect, transform.position, Quaternion.identity);
+        Destroy(explosion, explosionDuration);
+    }
+
     private void Start()
     {
         currentSpeed = playerSpeed;
@@ -15,8 +40,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        PlayerRotate();
-        accelDecel();
+        if (alive)
+        {
+            PlayerRotate();
+            accelDecel();
+        }
     }
 
     private void accelDecel()
