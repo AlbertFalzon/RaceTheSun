@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField] float playerSpeed = 150f;
     float currentSpeed;
-    float turnSpeed = 5f;
+    float currentSideSpeed;
+    List<float> speeds = new List<float>();
 
     [SerializeField] AudioClip explosionSound;
     [SerializeField] [Range(0, 5)] float explosionSoundVolume = 2;
@@ -19,7 +21,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter()
     {
-        print("Trigger Enter");
         alive = false;
         currentSpeed = 0f;
         playerExplode();
@@ -36,6 +37,9 @@ public class Player : MonoBehaviour
     private void Start()
     {
         currentSpeed = playerSpeed;
+        currentSideSpeed = 0f;
+        speeds.Add(currentSpeed);
+        speeds.Add(currentSideSpeed);
     }
 
     void Update()
@@ -43,18 +47,19 @@ public class Player : MonoBehaviour
         if (alive)
         {
             PlayerRotate();
-            accelDecel();
+            accelDecelForwards();
+            accelDecelSideways();
         }
     }
 
-    private void accelDecel()
+    private void accelDecelForwards()
     {
-        // Acceleration and deceleration
-        if ((Input.GetAxis("Vertical") > 0) && (currentSpeed <= 250f))
+        // Acceleration and deceleration for forwards movement
+        if ((Input.GetAxis("Vertical") > 0) && (currentSpeed < 250f))
         {
             currentSpeed += 1f;
         }
-        else if ((Input.GetAxis("Vertical") < 0) && (currentSpeed >= 100f))
+        else if ((Input.GetAxis("Vertical") < 0) && (currentSpeed > 100f))
         {
             currentSpeed -= 1f;
         }
@@ -71,26 +76,29 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void PlayerRotate()
+    private void accelDecelSideways()
     {
-        if (Input.GetAxis("Horizontal") > 0)
+        // Less complex script for sideways movement to have sharper turns
+        if (Input.GetAxis("Horizontal") != 0)
         {
-            var targetAngle = Quaternion.Euler(-135f, -90f, 90f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, turnSpeed * Time.deltaTime);
-        } else if (Input.GetAxis("Horizontal") < 0)
-        {
-            var targetAngle = Quaternion.Euler(-45f, -90f, 90f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, turnSpeed * Time.deltaTime);
+            currentSideSpeed = Input.GetAxis("Horizontal") * 75f;
         } else
         {
-            var targetAngle = Quaternion.Euler(-90f, -90f, 90f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, (turnSpeed / 5) * Time.deltaTime);
+            currentSideSpeed = Convert.ToInt32(currentSideSpeed / 2f);
         }
-
     }
 
-    public float returnSpeed()
+    // Method that rotates player and adjusts sideways movement speed
+    private void PlayerRotate()
     {
-        return currentSpeed;
+        var targetAngle = Quaternion.Euler((Input.GetAxis("Horizontal") * -45f) - 90f, -90f, 90f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, 5f * Time.deltaTime);
+    }
+
+    public List<float> returnSpeeds()
+    {
+        speeds[0] = currentSpeed;
+        speeds[1] = currentSideSpeed;
+        return speeds;
     }
 }
