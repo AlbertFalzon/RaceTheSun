@@ -21,9 +21,12 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter()
     {
-        alive = false;
-        currentSpeed = 0f;
-        playerExplode();
+        if (FindObjectOfType<Timer>().returnTimer() > 0)
+        {
+            alive = false;
+            currentSpeed = 0f;
+            playerExplode();
+        }
     }
 
     private void playerExplode()
@@ -32,6 +35,7 @@ public class Player : MonoBehaviour
         AudioSource.PlayClipAtPoint(explosionSound, mainCamera.transform.position, explosionSoundVolume);
         GameObject explosion = Instantiate(shipExplosionEffect, transform.position, Quaternion.identity);
         Destroy(explosion, explosionDuration);
+        FindObjectOfType<Level>().loadGameOver();
     }
 
     private void Start()
@@ -81,7 +85,7 @@ public class Player : MonoBehaviour
         // Less complex script for sideways movement to have sharper turns
         if (Input.GetAxis("Horizontal") != 0)
         {
-            currentSideSpeed = Input.GetAxis("Horizontal") * 75f;
+            currentSideSpeed = -Input.GetAxis("Horizontal") * 75f;
         } else
         {
             currentSideSpeed = Convert.ToInt32(currentSideSpeed / 2f);
@@ -100,5 +104,10 @@ public class Player : MonoBehaviour
         speeds[0] = currentSpeed;
         speeds[1] = currentSideSpeed;
         return speeds;
+    }
+
+    public bool returnAlive()
+    {
+        return alive;
     }
 }

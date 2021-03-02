@@ -7,9 +7,15 @@ using UnityEngine;
 public class WaveConfig : ScriptableObject
 {
     [SerializeField] GameObject obstacleGroup;
+    [SerializeField] float delay = 0f;
 
     public GameObject returnObstacleGroup()
     {
         return obstacleGroup;
+    }
+
+    public float returnDelay()
+    {
+        return delay;
     }
 }

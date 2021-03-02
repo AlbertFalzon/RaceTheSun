@@ -26,7 +26,7 @@ public class Obstacle : MonoBehaviour
         currentPos.z -= currentSpeeds[0] * Time.deltaTime;
         transform.position = currentPos;
 
-        if(transform.position.z <= -100f)
+        if(transform.position.z <= -500f)
         {
             Destroy(gameObject);
         }
