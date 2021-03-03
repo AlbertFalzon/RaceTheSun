@@ -1,7 +1,7 @@
 # RaceTheSun
 Small project created for an internship position
 
-To play the game go on the build folder and select RaceTheSun.exe
+The executable can be found at 'RaceTheSun\Build\RaceTheSun.exe'
 
 This is also my first serious take on a 3d game in unity.
 Since the plane is infinite the current plan is to have to obstacles move instead of the player.
